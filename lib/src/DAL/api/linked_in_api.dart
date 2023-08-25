@@ -96,6 +96,30 @@ class LinkedInApi {
     return LinkedInUserModel.fromJson(response);
   }
 
+  Future<LinkedInUserModel> fetchUserInfo({
+    required final String? token,
+    required final List<String> projection,
+    required final http.Client client,
+  }) async {
+    assert(token != null);
+    log('LinkedInAuth-steps: trying to fetchProfile...');
+
+    final endpoint = _generateEndpoint(
+      EnvironmentAccess.profile,
+      'userinfo',
+    );
+
+    log('LinkedInAuth-steps: trying to fetchProfile on ${endpoint.toString()}');
+
+    final response = await _get(endpoint, token!, client);
+
+    log('LinkedInAuth-steps: trying to fetchProfile DONE');
+    print(response);
+    print(response.runtimeType);
+
+    return LinkedInUserModel.fromUserInfo(response);
+  }
+
   Future<LinkedInProfileEmail> fetchEmail({
     required final String? token,
     required final http.Client client,
