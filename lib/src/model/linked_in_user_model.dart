@@ -30,7 +30,7 @@ class LinkedInUserModel {
     final localizedLastName = json['localizedLastName'];
     final userId = json['id'];
 
-    return LinkedInUserModel(
+    LinkedInUserModel userModel = LinkedInUserModel(
       firstName:
           firstName != null ? LinkedInPersonalInfo.fromJson(firstName) : null,
       lastName:
@@ -42,6 +42,52 @@ class LinkedInUserModel {
       localizedFirstName: localizedFirstName,
       localizedLastName: localizedLastName,
     );
+    return userModel = userModel
+      ..email = LinkedInProfileEmail(
+        elements: [
+          LinkedInDeepEmail(
+            handle: json['email'],
+          ),
+        ],
+      );
+  }
+
+  factory LinkedInUserModel.fromUserInfo(final Map<String, dynamic> json) {
+    final firstName = json['given_name'];
+    final lastName = json['family_name'];
+    final profilePicture = json['picture'];
+    final userId = json['id'] ?? '';
+    final userLocale = json['locale'] == null
+        ? null
+        : LinkedInPreferredLocal.fromJson(json['locale']);
+    final email = json['email'] == null
+        ? null
+        : LinkedInProfileEmail(
+            elements: [
+              LinkedInDeepEmail(
+                handle: json['email'],
+              )
+            ],
+          );
+
+    return LinkedInUserModel(
+      firstName: firstName != null
+          ? LinkedInPersonalInfo(
+              localized: LinkedInLocalInfo(label: firstName),
+              preferredLocal: userLocale,
+            )
+          : null,
+      lastName: lastName != null
+          ? LinkedInPersonalInfo(
+              localized: LinkedInLocalInfo(label: lastName),
+              preferredLocal: userLocale,
+            )
+          : null,
+      profilePicture: profilePicture != null
+          ? LinkedInProfilePicture(displayImage: profilePicture)
+          : null,
+      userId: userId,
+    )..email = email;
   }
 
   final LinkedInPersonalInfo? firstName;

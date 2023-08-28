@@ -92,7 +92,7 @@ class _LinkedInUserWidgetState extends State<LinkedInUserWidget> {
           ClientFetcher(
             graph: graph,
             url: config.url,
-          ).fetchUser().then(
+          ).fetchUserInfo().then(
             (final action) {
               if (action is UserSucceededAction) {
                 widget.onGetUserProfile?.call(action);

@@ -34,4 +34,22 @@ class UserRepository {
 
     return basicUserProfile;
   }
+
+  Future<LinkedInUserModel> fetchUserInfo({
+    required final LinkedInTokenObject token,
+    required final List<String> projection,
+    required final http.Client client,
+  }) async {
+    log('Fetching user profile');
+
+    final basicUserProfile = await api.fetchUserInfo(
+      token: token.accessToken,
+      projection: projection,
+      client: client,
+    );
+
+    basicUserProfile.token = token;
+
+    return basicUserProfile;
+  }
 }
